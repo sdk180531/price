@@ -1,4 +1,4 @@
-// 친구 초대 화면 — 내 초대코드/링크 공유. 친구가 코드로 가입하면 둘 다 1,000P.
+// 친구 초대 화면 — 내 초대코드/링크 공유. 지급액은 point_policy 테이블 정책을 따른다.
 import { Ionicons } from '@expo/vector-icons';
 import * as Clipboard from 'expo-clipboard';
 import * as Linking from 'expo-linking';
@@ -21,7 +21,9 @@ import { KarrotColors, Radius } from '@/theme/karrot';
 export default function ReferralScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const { getReferralCode } = usePoints();
+  const { getReferralCode, pointPolicy } = usePoints();
+  const { signupBonus, referralReward } = pointPolicy;
+  const sameReward = signupBonus === referralReward;
 
   const [code, setCode] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -34,9 +36,10 @@ export default function ReferralScreen() {
 
   // 현재 실행 환경에 맞는 딥링크 생성 (Expo Go: exp://, 빌드 앱: prtice://)
   const link = code ? Linking.createURL('/sign-up', { queryParams: { ref: code } }) : '';
-  const message = code
-    ? `🥕 당근마켓 초대!\n초대코드 [${code}] 로 가입하면 친구도 나도 각각 1,000P를 받아요.\n${link}`
-    : '';
+  const rewardText = sameReward
+    ? `친구도 나도 각각 ${signupBonus.toLocaleString('ko-KR')}P를 받아요`
+    : `친구는 ${signupBonus.toLocaleString('ko-KR')}P, 나는 ${referralReward.toLocaleString('ko-KR')}P를 받아요`;
+  const message = code ? `🥕 당근마켓 초대!\n초대코드 [${code}] 로 가입하면 ${rewardText}.\n${link}` : '';
 
   const notify = (msg: string) => (Platform.OS === 'web' ? window.alert(msg) : undefined);
 
@@ -79,10 +82,13 @@ export default function ReferralScreen() {
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         <View style={styles.hero}>
           <Ionicons name="gift" size={48} color={KarrotColors.primary} />
-          <Text style={styles.heroTitle}>친구 초대하고{'\n'}둘 다 1,000P 받기</Text>
+          <Text style={styles.heroTitle}>
+            친구 초대하고{'\n'}
+            {sameReward ? `둘 다 ${signupBonus.toLocaleString('ko-KR')}P 받기` : '포인트 받기'}
+          </Text>
           <Text style={styles.heroDesc}>
             친구가 아래 초대코드로 가입하면{'\n'}
-            <Text style={{ fontWeight: '700', color: KarrotColors.primary }}>친구도 나도 각각 1,000P</Text>를 받아요.
+            <Text style={{ fontWeight: '700', color: KarrotColors.primary }}>{rewardText}</Text>.
           </Text>
         </View>
 

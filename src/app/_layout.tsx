@@ -44,6 +44,9 @@ function RootNavigator() {
         contentStyle: { backgroundColor: '#fff' },
       }}
     >
+      {/* 관리자 페이지 — 고객 로그인 여부와 무관하게 항상 접근 가능 (자체 admin/password 로그인) */}
+      <Stack.Screen name="admin" />
+
       {/* 로그인한 사용자만 접근 가능 */}
       <Stack.Protected guard={!!session}>
         <Stack.Screen name="(tabs)" />

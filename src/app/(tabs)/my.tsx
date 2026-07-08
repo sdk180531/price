@@ -23,7 +23,7 @@ export default function MyScreen() {
   const pct = Math.min(100, (TEMPERATURE / 99) * 100);
   const router = useRouter();
   const { session, signOut } = useAuth();
-  const { points } = usePoints();
+  const { points, pointPolicy } = usePoints();
 
   const onLogout = () => {
     // 웹은 Alert 버튼 콜백이 제한적이라 confirm 사용
@@ -71,7 +71,9 @@ export default function MyScreen() {
             onPress={() => router.push('/referral')}
           >
             <Ionicons name="gift-outline" size={16} color="#fff" />
-            <Text style={styles.referralText}>친구 초대하고 1,000P 받기</Text>
+            <Text style={styles.referralText}>
+              친구 초대하고 {pointPolicy.referralReward.toLocaleString('ko-KR')}P 받기
+            </Text>
           </Pressable>
         </View>
 

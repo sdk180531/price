@@ -27,7 +27,7 @@ export default function SignUpScreen() {
   const insets = useSafeAreaInsets();
   const { ref } = useLocalSearchParams<{ ref?: string }>();
   const { signUp } = useAuth();
-  const { redeemReferral } = usePoints();
+  const { redeemReferral, pointPolicy } = usePoints();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -63,10 +63,10 @@ export default function SignUpScreen() {
         // 이메일 확인이 필요한 설정이면 안내 화면 (초대코드는 확인 후 로그인 시점에 처리 필요)
         setSent(true);
       } else if (invite.trim()) {
-        // 자동 로그인 상태 → 초대코드 적용 (추천인·본인 각 1,000P)
+        // 자동 로그인 상태 → 초대코드 적용 (지급액은 point_policy 테이블 정책을 따름)
         try {
           const r = await redeemReferral(invite.trim());
-          if (r.ok) notify('초대코드 적용! 1,000P가 지급됐어요 🎉');
+          if (r.ok) notify(`초대코드 적용! ${pointPolicy.signupBonus.toLocaleString('ko-KR')}P가 지급됐어요 🎉`);
           else if (r.reason === 'invalid_code') notify('초대코드가 올바르지 않아 적용되지 않았어요. (가입은 완료됐어요)');
           else if (r.reason === 'self') notify('본인 초대코드는 사용할 수 없어요. (가입은 완료됐어요)');
           else if (r.reason === 'already_referred') notify('이미 초대코드를 사용한 계정이에요.');
