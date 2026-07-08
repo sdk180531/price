@@ -1,0 +1,45 @@
+diff --git a/node_modules/@tosspayments/widget-sdk-react-native/src/components/RequestPaymentsModal.tsx b/node_modules/@tosspayments/widget-sdk-react-native/src/components/RequestPaymentsModal.tsx
+index b25563b..b6aac07 100644
+--- a/node_modules/@tosspayments/widget-sdk-react-native/src/components/RequestPaymentsModal.tsx
++++ b/node_modules/@tosspayments/widget-sdk-react-native/src/components/RequestPaymentsModal.tsx
+@@ -1,4 +1,4 @@
+-import { Alert, Modal, SafeAreaView } from 'react-native';
++import { Alert, Modal, Pressable, SafeAreaView, Text, View } from 'react-native';
+ import { URL } from 'react-native-url-polyfill';
+ import WebView from 'react-native-webview';
+ import { usePaymentWidgetContext } from '../hooks/usePaymentWidget';
+@@ -99,6 +99,34 @@ export function RequestPaymentsModal({
+       visible={isVisible}
+     >
+       <SafeAreaView style={{ flex: 1 }}>
++        {/* 결제 취소(X) 헤더 — 카드사 결제 화면에서 빠져나올 수 있게 추가 */}
++        <View
++          style={{
++            flexDirection: 'row',
++            alignItems: 'center',
++            height: 52,
++            paddingHorizontal: 8,
++            borderBottomWidth: 1,
++            borderBottomColor: '#EFEFF1',
++            backgroundColor: '#FFFFFF',
++          }}
++        >
++          <Pressable
++            accessibilityLabel="결제 취소"
++            hitSlop={12}
++            onPress={() =>
++              onFail({
++                code: 'USER_CANCEL',
++                message: '사용자가 결제를 취소하였습니다.',
++                orderId: 'unknown',
++              })
++            }
++            style={{ width: 44, height: 44, alignItems: 'center', justifyContent: 'center' }}
++          >
++            <Text style={{ fontSize: 24, color: '#333333', fontWeight: '600' }}>✕</Text>
++          </Pressable>
++          <Text style={{ fontSize: 16, fontWeight: '700', color: '#222222' }}>결제</Text>
++        </View>
+         <WebView
+           androidLayerType={'none'}
+           source={{
