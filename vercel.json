@@ -1,0 +1,8 @@
+{
+  "buildCommand": "npx expo export -p web",
+  "outputDirectory": "dist",
+  "rewrites": [
+    { "source": "/chat/:id", "destination": "/chat/[id].html" },
+    { "source": "/product/:id", "destination": "/product/[id].html" }
+  ]
+}
