@@ -44,9 +44,6 @@ function RootNavigator() {
         contentStyle: { backgroundColor: '#fff' },
       }}
     >
-      {/* 관리자 페이지 — 고객 로그인 여부와 무관하게 항상 접근 가능 (자체 admin/password 로그인) */}
-      <Stack.Screen name="admin" />
-
       {/* 로그인한 사용자만 접근 가능 */}
       <Stack.Protected guard={!!session}>
         <Stack.Screen name="(tabs)" />
@@ -65,6 +62,10 @@ function RootNavigator() {
         <Stack.Screen name="sign-up" />
         <Stack.Screen name="find-password" />
       </Stack.Protected>
+
+      {/* 관리자 페이지 — 앱 로그인과 무관하게 /admin 으로 직접 접근(자체 로그인).
+          단, 로그아웃 시 '첫 착지 화면'이 되지 않도록 반드시 가드 밖 '맨 뒤'에 선언한다. */}
+      <Stack.Screen name="admin" />
     </Stack>
   );
 }
